@@ -140,3 +140,43 @@ private String password;
 private String phoneNumber;
 // ...
 ```
+
+## PUT API
+
+- 새로운 리소스를 생성하거나 대상 리소스를 나타내는 데이터를 대체한다
+- PUT과 POST의 차이는 멱등성이다
+- PUT은 멱등성을 갖는다
+- PUT은 한 번을 보내도, 여러 번을 연속으로 보내도 같은 효과를 보인다
+
+#### 멱등성
+
+> _어떤 연산을 여러 번 반복해도 처음 연산과 동일한 결과를 얻는 성질을 의미_
+
+```java
+@PutMapping("/put/{userId}")
+public PutRequestDTO putTest(@RequestBody PutRequestDTO putRequestDTO, @PathVariable(name = "userId") Long id) {
+  System.out.println(putRequestDTO.toString());
+  System.out.println("id : " + id);
+
+  return putRequestDTO;
+}
+```
+
+- RestController인 경우 Object 자체를 반환하면
+- 스프링부트 자체에서 Object 를 Object Mapper 를 통해서 JSON으로 변환해줌
+
+### @JsonNaming
+
+- 해당 클래스의 표기법 지정 어노테이션
+
+- SnakeCase로 표기법 지정
+
+  ```java
+  @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
+  public class PutRequestDTO {
+    private String name;
+    private int age;
+    private List<CarDTO> carList;
+
+    // ...
+  ```
