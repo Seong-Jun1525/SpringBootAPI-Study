@@ -241,3 +241,101 @@ public ResponseEntity<UserDTO> put(@RequestBody UserDTO userDTO) {
   return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
 }
 ```
+
+## Page 응답
+
+- API를 만들 때는 @RestController를 사용하였지만 페이지를 반환할 때는 @Controller를 사용한다
+- `src/main/resources/static/` 하위에 페이지가 존재해야한다
+
+```java
+@Controller
+public class PageController {
+
+	@GetMapping("/")
+	public String main() {
+		return "index.html";
+	}
+}
+```
+
+### @Controller에서 JSON 응답하기
+
+- @ResponseEntity를 사용하여 JSON을 응답할 수 있음
+- @ResponseBody를 사용하여 JSON을 응답할 수도 있음
+
+```java
+@ResponseBody
+@GetMapping("/user")
+public UserDTO userDTO() {
+  var userDTO = new UserDTO("김길동", 10, "010-1234-1234", "패스트캠퍼스");
+  // var : 타입 추론 가능
+  return userDTO;
+}
+```
+
+#### UserDTO
+
+```java
+@JsonInclude(JsonInclude.Include.NON_NULL) // null 포함 x
+public class UserDTO {
+	private String name;
+	private int age;
+	private String phoneNumber;
+	private String address;
+
+  // ...
+}
+
+```
+
+- JSON을 반환할 때 null 값이 포함될 수도 있다
+- null 값 포함 여부를 @JsonInclude를 사용하여 설정할 수 있다
+  - 개발 할 때 JSON 규격서 같은 곳에 명시를 해줘야 한다
+
+> 선호하는 방법은 페이지 컨트롤러에서는 JSON을 응답하지 않고 RestController를 사용한 곳에서 JSON 객체를 반환하는 것이다
+
+## Object Mapper의 동작 방식
+
+### 사용되는 경우
+
+- Text JSON -> Object
+- Object -> Text JSON
+
+```
+Controller 에서 JSON 혹은 Text 요청 받을 시 Object 로 변환
+
+Object 를 응답 시 JSON 혹은 Text 로 변환
+```
+
+```java
+@Test
+void contextLoads() throws JsonProcessingException {
+  var objectMapper = new ObjectMapper();
+
+  // object -> text
+
+  var user = new UserDTO("홍길동", 10, "010-1234-1234", "fastcampus");
+
+  var text = objectMapper.writeValueAsString(user);
+
+  System.out.println(text);
+
+  // text -> object
+  // object mapper 는 동작하기 위해서 기본생성자가 필수이다
+  var objectUser = objectMapper.readValue(text, UserDTO.class);
+  System.out.println(objectUser);
+}
+```
+
+#### object ➡️ text
+
+- object mapper 는 **`get method 를 참조`** 한다
+  - ➡️ `Getter 필요!!`
+
+#### text ➡️ object
+
+- object mapper 는 동작하기 위해서 **`기본생성자가 필수`** 이다
+
+#### 주의할 점
+
+> object mapper 는 get method 를 참조하므로 내가 작성한 클래스 가 object mapper 에 사용될 경우 메서드명에서 get 을 빼줘야한다

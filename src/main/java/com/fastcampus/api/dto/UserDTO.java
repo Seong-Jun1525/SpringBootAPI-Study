@@ -1,5 +1,10 @@
 package com.fastcampus.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+// 응답할 때 null 값들을 포함하지 않는 어노테이션
+// 개발 할 때 JSON 규격서 같은 곳에 명시를 해줘야 한다
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
 	private String name;
 	private int age;
