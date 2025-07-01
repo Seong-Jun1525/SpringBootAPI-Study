@@ -9,7 +9,7 @@
 - `@Controller`
   - View를 반환
 - `@RestController`
-  - @Controller + @RequestBody
+  - @Controller + @ResponseBody
   - JSON 객체를 반환
 
 ### RequestMapping
@@ -101,3 +101,7 @@ public String pathVariable(@PathVariable(name = "name") String name) {
 
 - @RequestParam을 붙이지 않아도 스프링부트에서 판단한다
 - 객체의 변수와 이름을 매칭한다
+
+---
+
+## POST API
