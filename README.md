@@ -105,3 +105,38 @@ public String pathVariable(@PathVariable(name = "name") String name) {
 ---
 
 ## POST API
+
+### @PostMapping 사용
+
+```java
+@PostMapping("/post")
+public void post(@RequestBody Map<String, Object> requestData) {
+  requestData.entrySet().forEach(entry -> {
+    System.out.println("key : " + entry.getKey());
+    System.out.println("value : " + entry.getValue());
+  });
+}
+
+@PostMapping("/post2")
+public void post2(@RequestBody PostRequestDTO postRequestDTO) {
+  System.out.println(postRequestDTO.toString());
+}
+```
+
+### @JsonProperty
+
+- 키값을 매칭시킬 수 있다.
+- 하나하나 전부 작성해줘야 하는 단점이 있다.
+- Camel Case, Snake Case 등의 특정 표기법이 아니거나 `약어` 같은 경우에 사용한다
+
+```java
+// ...
+private String account;
+private String email;
+private String address;
+private String password;
+
+@JsonProperty("phone_number")
+private String phoneNumber;
+// ...
+```
