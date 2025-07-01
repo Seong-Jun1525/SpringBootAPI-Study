@@ -203,5 +203,41 @@ public void deleteTest(@PathVariable("userId") String userId, @RequestParam(valu
 */
 ```
 
-- Delete -> 자체가 리소스 삭제
+- Delete ➡️ 자체가 리소스 삭제
   - 그렇기 때문에 리소스가 없는 상태이더라도 200 상태코드 반환 => 멱등성!
+
+## Response 응답
+
+### Text 응답
+
+```java
+// Text
+@GetMapping("/text")
+public String text(@RequestParam("account") String account) {
+  return account;
+}
+```
+
+### JSON 응답
+
+```java
+// JSON
+@PostMapping("/json")
+public UserDTO json(@RequestBody UserDTO userDTO) {
+  return userDTO;
+}
+```
+
+- Request ➡️ Object Mapper를 통해서 Object 로 변환 ➡️ Method ➡️ Object ➡️ Object Mapper 를 통해서 JSON 으로 변환 ➡️ Response
+
+### ResponseEntity
+
+- 가장 명확하게 응답을 반환하는 법
+- PUT 같은 경우 생성할 경우 201을 반환하게 되어 있음
+
+```java
+@PutMapping("/json-put")
+public ResponseEntity<UserDTO> put(@RequestBody UserDTO userDTO) {
+  return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
+}
+```
