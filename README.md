@@ -180,3 +180,28 @@ public PutRequestDTO putTest(@RequestBody PutRequestDTO putRequestDTO, @PathVari
 
     // ...
   ```
+
+## DELETE API
+
+- 삭제된 데이터든 삭제하는 데이터든 삭제하는 것은 동일하므로 멱등성을 갖는다
+- 삭제한 순간 데이터는 삭제되므로 안정성은 없다
+- Delete Method 는 많은 데이터를 받지 않는다 (받을 필요가 없음)
+
+```java
+@DeleteMapping("/delete/{userId}")
+public void deleteTest(@PathVariable("userId") String userId, @RequestParam(value = "account") String account) {
+    System.out.println(userId);
+    System.out.println(account);
+}
+
+/** 오류발생
+  java.lang.IllegalArgumentException:
+  Name for argument of type [java.lang.String] not specified, and parameter name information not available via reflection.
+  Ensure that the compiler uses the '-parameters' flag.
+
+  => @PathVariable("userId") 로 userId 명시로 해결!!
+*/
+```
+
+- Delete -> 자체가 리소스 삭제
+  - 그렇기 때문에 리소스가 없는 상태이더라도 200 상태코드 반환 => 멱등성!
